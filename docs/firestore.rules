@@ -1,0 +1,14 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Traveller / vendor / admin profiles (phase 1: anonymous auth UID).
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Add batches, trips, vendor_inbox with stricter rules as you model them.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
