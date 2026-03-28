@@ -1,17 +1,14 @@
 // ignore_for_file: lines_longer_than_80_chars
 //
-// Replace this file by running:
-//   dart pub global activate flutterfire_cli
+// Synced with `android/app/google-services.json` for project randomly-3b0c6.
+// For iOS / Web, add those apps in Firebase Console and run:
 //   flutterfire configure
-//
-// Placeholder values let the project compile; real Firebase features need your
-// project's keys from the Firebase Console.
+// or paste the values from each platform’s config file.
 
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
-/// Default [FirebaseOptions] for use with your Firebase apps.
 abstract final class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -32,29 +29,33 @@ abstract final class DefaultFirebaseOptions {
     }
   }
 
+  /// Add a Web app in Firebase Console → Project settings → Your apps, then
+  /// replace [appId] with the `appId` from the web config snippet.
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'REPLACE_ME',
-    appId: '1:000000000000:web:0000000000000000000000',
-    messagingSenderId: '000000000000',
-    projectId: 'randomly-dev-placeholder',
-    authDomain: 'randomly-dev-placeholder.firebaseapp.com',
-    storageBucket: 'randomly-dev-placeholder.appspot.com',
+    apiKey: 'AIzaSyArTxWsYynvykfVZH7L69gsapnydkltG8E',
+    appId: '1:357044840267:web:577d7d4ac2ba3bba4eaace',
+    messagingSenderId: '357044840267',
+    projectId: 'randomly-3b0c6',
+    authDomain: 'randomly-3b0c6.firebaseapp.com',
+    storageBucket: 'randomly-3b0c6.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyPlaceholderReplaceFromFirebaseConsole',
-    appId: '1:000000000000:android:0000000000000000000000',
-    messagingSenderId: '000000000000',
-    projectId: 'randomly-dev-placeholder',
-    storageBucket: 'randomly-dev-placeholder.appspot.com',
+    apiKey: 'AIzaSyArTxWsYynvykfVZH7L69gsapnydkltG8E',
+    appId: '1:357044840267:android:577d7d4ac2ba3bba4eaace',
+    messagingSenderId: '357044840267',
+    projectId: 'randomly-3b0c6',
+    storageBucket: 'randomly-3b0c6.firebasestorage.app',
   );
 
+  /// Add an iOS app in Firebase, download `GoogleService-Info.plist`, and set
+  /// [appId] to `GOOGLE_APP_ID` from that file (differs from Android).
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyPlaceholderReplaceFromFirebaseConsole',
-    appId: '1:000000000000:ios:0000000000000000000000',
-    messagingSenderId: '000000000000',
-    projectId: 'randomly-dev-placeholder',
-    storageBucket: 'randomly-dev-placeholder.appspot.com',
+    apiKey: 'AIzaSyArTxWsYynvykfVZH7L69gsapnydkltG8E',
+    appId: '1:357044840267:ios:577d7d4ac2ba3bba4eaace',
+    messagingSenderId: '357044840267',
+    projectId: 'randomly-3b0c6',
+    storageBucket: 'randomly-3b0c6.firebasestorage.app',
     iosBundleId: 'com.example.randomly',
   );
 }

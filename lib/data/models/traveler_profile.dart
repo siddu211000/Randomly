@@ -19,6 +19,9 @@ class TravelerProfile {
     this.ageComfortMax = 45,
     this.genderIdentity,
     this.onboardingComplete = false,
+    this.matchingStatus,
+    this.batchId,
+    this.queuedAt,
     this.createdAt,
     this.updatedAt,
   });
@@ -37,6 +40,10 @@ class TravelerProfile {
   final int ageComfortMax;
   final String? genderIdentity;
   final bool onboardingComplete;
+  /// Server values: `idle` | `queued` | `in_batch` (omit / null treated as idle).
+  final String? matchingStatus;
+  final String? batchId;
+  final DateTime? queuedAt;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -55,6 +62,9 @@ class TravelerProfile {
     int? ageComfortMax,
     String? genderIdentity,
     bool? onboardingComplete,
+    String? matchingStatus,
+    String? batchId,
+    DateTime? queuedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -73,6 +83,9 @@ class TravelerProfile {
       ageComfortMax: ageComfortMax ?? this.ageComfortMax,
       genderIdentity: genderIdentity ?? this.genderIdentity,
       onboardingComplete: onboardingComplete ?? this.onboardingComplete,
+      matchingStatus: matchingStatus ?? this.matchingStatus,
+      batchId: batchId ?? this.batchId,
+      queuedAt: queuedAt ?? this.queuedAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -96,6 +109,9 @@ class TravelerProfile {
       'ageComfortMax': ageComfortMax,
       'genderIdentity': genderIdentity,
       'onboardingComplete': onboardingComplete,
+      if (matchingStatus != null) 'matchingStatus': matchingStatus,
+      if (batchId != null) 'batchId': batchId,
+      if (queuedAt != null) 'queuedAt': Timestamp.fromDate(queuedAt!),
       'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
       'updatedAt': FieldValue.serverTimestamp(),
     };
@@ -122,6 +138,9 @@ class TravelerProfile {
       ageComfortMax: (map['ageComfortMax'] as num?)?.toInt() ?? 45,
       genderIdentity: map['genderIdentity'] as String?,
       onboardingComplete: map['onboardingComplete'] as bool? ?? false,
+      matchingStatus: map['matchingStatus'] as String?,
+      batchId: map['batchId'] as String?,
+      queuedAt: tsToDate(map['queuedAt']),
       createdAt: tsToDate(map['createdAt']),
       updatedAt: tsToDate(map['updatedAt']),
     );

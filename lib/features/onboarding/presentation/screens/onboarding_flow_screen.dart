@@ -96,6 +96,7 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
       await auth.ensureSignedIn();
     }
     final userId = auth.currentUser!.uid;
+    final existing = await repo.fetchProfile(userId);
 
     final profile = TravelerProfile(
       uid: userId,
@@ -112,7 +113,10 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
       ageComfortMax: _ageComfort.end.round(),
       genderIdentity: _gender,
       onboardingComplete: true,
-      createdAt: DateTime.now(),
+      matchingStatus: existing?.matchingStatus,
+      batchId: existing?.batchId,
+      queuedAt: existing?.queuedAt,
+      createdAt: existing?.createdAt ?? DateTime.now(),
     );
 
     await repo.saveProfile(profile);

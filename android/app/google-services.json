@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "000000000000",
-    "project_id": "randomly-dev-placeholder",
-    "storage_bucket": "randomly-dev-placeholder.appspot.com"
+    "project_number": "357044840267",
+    "project_id": "randomly-3b0c6",
+    "storage_bucket": "randomly-3b0c6.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+        "mobilesdk_app_id": "1:357044840267:android:577d7d4ac2ba3bba4eaace",
         "android_client_info": {
           "package_name": "com.example.randomly"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "placeholder-replace-with-firebase-console-download"
+          "current_key": "AIzaSyArTxWsYynvykfVZH7L69gsapnydkltG8E"
         }
       ],
       "services": {

@@ -1,12 +1,27 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Traveller / vendor / admin profiles (phase 1: anonymous auth UID).
+
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Add batches, trips, vendor_inbox with stricter rules as you model them.
+    match /batches/{batchId} {
+      allow read: if request.auth != null
+          && request.auth.uid in resource.data.memberIds;
+      allow write: if false;
+    }
+
+    match /destinations/{destId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    match /vendorOffers/{vendorUid}/incoming/{batchId} {
+      allow read: if request.auth != null && request.auth.uid == vendorUid;
+      allow write: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

@@ -32,4 +32,23 @@ class TravelerProfileRepository {
     }
     await _users.doc(profile.uid).set(data, SetOptions(merge: true));
   }
+
+  /// Enters the server-side matching queue (`scheduledMatching` / manual job).
+  Future<void> joinMatchingPool(String uid) async {
+    await _users.doc(uid).set(
+      {
+        'matchingStatus': 'queued',
+        'queuedAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
+      SetOptions(merge: true),
+    );
+  }
+
+  Stream<Map<String, dynamic>?> watchBatchDoc(String batchId) {
+    return _db.collection('batches').doc(batchId).snapshots().map((snap) {
+      if (!snap.exists || snap.data() == null) return null;
+      return snap.data();
+    });
+  }
 }
