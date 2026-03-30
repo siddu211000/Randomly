@@ -40,13 +40,31 @@ abstract final class DefaultFirebaseOptions {
     storageBucket: 'randomly-3b0c6.firebasestorage.app',
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyArTxWsYynvykfVZH7L69gsapnydkltG8E',
-    appId: '1:357044840267:android:577d7d4ac2ba3bba4eaace',
-    messagingSenderId: '357044840267',
-    projectId: 'randomly-3b0c6',
-    storageBucket: 'randomly-3b0c6.firebasestorage.app',
-  );
+  /// If Android Auth shows `CONFIGURATION_NOT_FOUND`, paste your **Android**
+  /// OAuth 2.0 client ID here (not the Web client).
+  ///
+  /// Google Cloud Console → project **randomly-3b0c6** → **APIs & Services** →
+  /// **Credentials** → **Create credentials** → **OAuth client ID** →
+  /// application type **Android** → package `com.example.randomly` → your
+  /// debug **SHA-1** → Create → copy **Client ID** (`….apps.googleusercontent.com`).
+  ///
+  /// Or run `flutterfire configure` after adding SHA-1 in Firebase and use the
+  /// generated file (it may fill this for you).
+  static const String _androidOAuthClientId =
+      '357044840267-eqorstfigdu11flniiq4pe0lmni0efgp.apps.googleusercontent.com';
+
+  static FirebaseOptions get android {
+    const id = _androidOAuthClientId;
+    return FirebaseOptions(
+      apiKey: 'AIzaSyArTxWsYynvykfVZH7L69gsapnydkltG8E',
+      appId: '1:357044840267:android:577d7d4ac2ba3bba4eaace',
+      messagingSenderId: '357044840267',
+      projectId: 'randomly-3b0c6',
+      authDomain: 'randomly-3b0c6.firebaseapp.com',
+      storageBucket: 'randomly-3b0c6.firebasestorage.app',
+      androidClientId: id.isEmpty ? null : id,
+    );
+  }
 
   /// Add an iOS app in Firebase, download `GoogleService-Info.plist`, and set
   /// [appId] to `GOOGLE_APP_ID` from that file (differs from Android).

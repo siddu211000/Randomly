@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -91,37 +92,82 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
 
     final auth = Get.find<FirebaseAuthRepository>();
     final repo = Get.find<TravelerProfileRepository>();
-    final uid = auth.currentUser?.uid;
-    if (uid == null) {
-      await auth.ensureSignedIn();
+
+    try {
+      var userId = auth.currentUser?.uid;
+      if (userId == null) {
+        await auth.ensureSignedIn();
+        userId = auth.currentUser?.uid;
+      }
+      if (userId == null) {
+        throw StateError('Signed in but no user id');
+      }
+
+      final existing = await repo.fetchProfile(userId);
+
+      final profile = TravelerProfile(
+        uid: userId,
+        hobbies: _hobbies.toList(),
+        personalityNote: _personality.text.trim().isEmpty
+            ? null
+            : _personality.text.trim(),
+        tripWindowStart: _tripStart,
+        tripWindowEnd: _tripEnd,
+        budgetMin: _budget.start,
+        budgetMax: _budget.end,
+        maxTravelDistanceKm: _maxDistanceKm,
+        ageComfortMin: _ageComfort.start.round(),
+        ageComfortMax: _ageComfort.end.round(),
+        genderIdentity: _gender,
+        onboardingComplete: true,
+        matchingStatus: existing?.matchingStatus,
+        batchId: existing?.batchId,
+        queuedAt: existing?.queuedAt,
+        createdAt: existing?.createdAt ?? DateTime.now(),
+      );
+
+      await repo.saveProfile(profile);
+      if (!mounted) return;
+      Get.offAllNamed(AppRoutes.userHome);
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
+      final raw = '${e.message} ${e.code}'.toUpperCase();
+      final isConfig = raw.contains('CONFIGURATION_NOT_FOUND');
+      final isAdminOnly = raw.contains('ADMIN-RESTRICTED-OPERATION') ||
+          raw.contains('ADMINISTRATORS ONLY');
+      String msg;
+      if (isConfig) {
+        msg = 'Auth still misconfigured. Stop the app, run: flutter clean && '
+            'flutter pub get && flutter run (full restart, not hot reload). '
+            'Confirm Anonymous sign-in is enabled in Firebase. Details: ${e.message ?? e.code}';
+      } else if (isAdminOnly) {
+        msg = 'Firebase is blocking new accounts (anonymous sign-in creates one). '
+            'Firebase Console → Authentication → Settings → User actions: '
+            'turn ON “Enable create (sign-up)” (or turn OFF block new users). '
+            'Also enable Anonymous under Sign-in method. (${e.code})';
+      } else {
+        msg = 'Sign-in failed: ${e.message ?? e.code}';
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(msg),
+          duration: const Duration(seconds: 18),
+        ),
+      );
+    } on FirebaseException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Could not save to Firestore: ${e.message}'),
+          duration: const Duration(seconds: 10),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Something went wrong: $e')),
+      );
     }
-    final userId = auth.currentUser!.uid;
-    final existing = await repo.fetchProfile(userId);
-
-    final profile = TravelerProfile(
-      uid: userId,
-      hobbies: _hobbies.toList(),
-      personalityNote: _personality.text.trim().isEmpty
-          ? null
-          : _personality.text.trim(),
-      tripWindowStart: _tripStart,
-      tripWindowEnd: _tripEnd,
-      budgetMin: _budget.start,
-      budgetMax: _budget.end,
-      maxTravelDistanceKm: _maxDistanceKm,
-      ageComfortMin: _ageComfort.start.round(),
-      ageComfortMax: _ageComfort.end.round(),
-      genderIdentity: _gender,
-      onboardingComplete: true,
-      matchingStatus: existing?.matchingStatus,
-      batchId: existing?.batchId,
-      queuedAt: existing?.queuedAt,
-      createdAt: existing?.createdAt ?? DateTime.now(),
-    );
-
-    await repo.saveProfile(profile);
-    if (!mounted) return;
-    Get.offAllNamed(AppRoutes.userHome);
   }
 
   @override
